@@ -27,7 +27,7 @@ db.query('CREATE TABLE IF NOT EXISTS `bank_account` (' +
     res.end(JSON.stringify(results));
   });
 
-db.query('CREATE TABLE `card_payment` (' +
+db.query('CREATE TABLE IF NOT EXISTS `card_payment` (' +
   '`payment_id` int(11) NOT NULL AUTO_INCREMENT,' +
   '`payment_account_number` int(11) DEFAULT NULL,' +
   '`payment_amount` int(11) DEFAULT NULL,' +
@@ -38,7 +38,7 @@ db.query('CREATE TABLE `card_payment` (' +
     res.end(JSON.stringify(results));
   });
 
-db.query('CREATE TABLE `money_transfer` (' +
+db.query('CREATE TABLE IF NOT EXISTS `money_transfer` (' +
   '`transaction_id` int(11) unsigned NOT NULL AUTO_INCREMENT,' +
   '`transaction_from_account_number` int(11) DEFAULT NULL,' +
   '`transaction_to_account_number` int(11) DEFAULT NULL,' +
