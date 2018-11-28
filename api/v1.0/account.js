@@ -2,72 +2,50 @@ var express = require('express');
 var db = require('../../database');
 const router = express.Router();
 
-
-function getAllBankAccounts(res) {
+// To get all of the item data
+router.get('/', (req, res, next) => {
     db.query('SELECT * FROM bank_account', (error, results, fields) => {
         if (error) throw error;
         res.end(JSON.stringify(results));
     });
-}
-
-function getAccountByAccountNumber(accountNumber, res) {
-    db.query('SELECT * FROM bank_account WHERE account_number=?', accountNumber, (error, results, fields) => {
-        if (error) throw error;
-        res.end(JSON.stringify(results));
-    });
-}
-
-function createAnAccount(accountData, res) {
-    db.query('INSERT INTO bank_account SET ?', accountData, (error, results, fields) => {
-        if (error) throw error;
-        res.end(JSON.stringify(results));
-    });
-}
-
-function addMoneyToAccountByAccountNumber(account_number, amount, res) {
-    db.query(
-        'UPDATE bank_account SET account_balance = account_balance + ? WHERE account_number = ?',
-        [amount, account_number], (error, results, fields) => {
-            if (error) throw error;
-            res.end(JSON.stringify(results));
-        }
-    );
-}
-
-function withdrawMoneyByAccountNumber(account_number, amount, res) {
-    db.query(
-        'UPDATE bank_account SET account_balance = account_balance - ? WHERE account_number = ?',
-        [amount, account_number], (error, results, fields) => {
-            if (error) throw error;
-            res.end(JSON.stringify(results));
-        }
-    );
-}
-
-
-// To get all of the item data
-router.get('/', (req, res, next) => {
-    getAllBankAccounts(res);
 });
 
 // To get a single item data
 router.get('/:account_number', (req, res) => {
-    getAccountByAccountNumber(req.params.account_number, res);
+    db.query('SELECT * FROM bank_account WHERE account_number=?', req.params.account_number, (error, results, fields) => {
+        if (error) throw error;
+        res.end(JSON.stringify(results));
+    });
 });
 
 // To create a new item record in database 
 router.post('/', (req, res) => {
-    createAnAccount(req.body, res);
+    db.query('INSERT INTO bank_account SET ?', req.body, (error, results, fields) => {
+        if (error) throw error;
+        res.end(JSON.stringify(results));
+    });
 });
 
 // To add money
 router.put('/add/:account_number', (req, res) => {
-    addMoneyToAccountByAccountNumber(req.params.account_number, req.body.amount, res);
+    db.query(
+        'UPDATE bank_account SET account_balance = account_balance + ? WHERE account_number = ?',
+        [req.body.amount, req.params.account_number], (error, results, fields) => {
+            if (error) throw error;
+            res.end(JSON.stringify(results));
+        }
+    );
 });
 
 // To withdraw money
 router.put('/withdraw/:account_number', (req, res) => {
-    withdrawMoneyByAccountNumber(req.params.account_number, req.body.amount, res);
+    db.query(
+        'UPDATE bank_account SET account_balance = account_balance - ? WHERE account_number = ?',
+        [req.body.amount, req.params.account_number], (error, results, fields) => {
+            if (error) throw error;
+            res.end(JSON.stringify(results));
+        }
+    );
 });
 
 
