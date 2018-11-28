@@ -3,28 +3,28 @@ var db = require('../../database');
 const router = express.Router();
 
 
-function getAllBankAccounts() {
+function getAllBankAccounts(res) {
     db.query('SELECT * FROM bank_account', (error, results, fields) => {
         if (error) throw error;
         res.end(JSON.stringify(results));
     });
 }
 
-function getAccountByAccountNumber(accountNumber) {
+function getAccountByAccountNumber(accountNumber, res) {
     db.query('SELECT * FROM bank_account WHERE account_number=?', accountNumber, (error, results, fields) => {
         if (error) throw error;
         res.end(JSON.stringify(results));
     });
 }
 
-function createAnAccount(accountData) {
+function createAnAccount(accountData, res) {
     db.query('INSERT INTO bank_account SET ?', accountData, (error, results, fields) => {
         if (error) throw error;
         res.end(JSON.stringify(results));
     });
 }
 
-function addMoneyToAccountByAccountNumber(account_number, amount) {
+function addMoneyToAccountByAccountNumber(account_number, amount, res) {
     db.query(
         'UPDATE bank_account SET account_balance = account_balance + ? WHERE account_number = ?',
         [amount, account_number], (error, results, fields) => {
@@ -34,7 +34,7 @@ function addMoneyToAccountByAccountNumber(account_number, amount) {
     );
 }
 
-function withdrawMoneyByAccountNumber(account_number, amount) {
+function withdrawMoneyByAccountNumber(account_number, amount, res) {
     db.query(
         'UPDATE bank_account SET account_balance = account_balance - ? WHERE account_number = ?',
         [amount, account_number], (error, results, fields) => {
@@ -47,27 +47,27 @@ function withdrawMoneyByAccountNumber(account_number, amount) {
 
 // To get all of the item data
 router.get('/', (req, res, next) => {
-    getAllBankAccounts();
+    getAllBankAccounts(res);
 });
 
 // To get a single item data
 router.get('/:account_number', (req, res) => {
-    getAccountByAccountNumber(req.params.account_number);
+    getAccountByAccountNumber(req.params.account_number, res);
 });
 
 // To create a new item record in database 
 router.post('/', (req, res) => {
-    createAnAccount(req.body);
+    createAnAccount(req.body, res);
 });
 
 // To add money
 router.put('/add/:account_number', (req, res) => {
-    addMoneyToAccountByAccountNumber(req.params.account_number, req.body.amount);
+    addMoneyToAccountByAccountNumber(req.params.account_number, req.body.amount, res);
 });
 
 // To withdraw money
 router.put('/withdraw/:account_number', (req, res) => {
-    withdrawMoneyByAccountNumber(req.params.account_number, req.body.amount);
+    withdrawMoneyByAccountNumber(req.params.account_number, req.body.amount, res);
 });
 
 

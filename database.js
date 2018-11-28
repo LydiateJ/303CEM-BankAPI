@@ -20,11 +20,14 @@ db.query('CREATE TABLE IF NOT EXISTS `bank_account` (' +
   '`account_number` int(11) NOT NULL,' +
   '`account_type` varchar(255) DEFAULT NULL,' +
   '`account_limits` int(11) DEFAULT NULL,' +
-  '`account_balance` int(11) DEFAULT 0,' +
+  '`account_balance` int(11) DEFAULT "0",' +
+  '`first_name` varchar(255) DEFAULT NULL,' +
+  '`surname` varchar(255) DEFAULT NULL,' +
+  '`email` varchar(255) DEFAULT NULL,' +
+  '`phone_number` int(11) DEFAULT NULL,' +
   'PRIMARY KEY (`account_number`)' +
   ') ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;', (error, results, fields) => {
     if (error) throw error;
-    res.end(JSON.stringify(results));
   });
 
 db.query('CREATE TABLE IF NOT EXISTS `card_payment` (' +
@@ -35,7 +38,6 @@ db.query('CREATE TABLE IF NOT EXISTS `card_payment` (' +
   'PRIMARY KEY (`payment_id`)' +
   ') ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;', (error, results, fields) => {
     if (error) throw error;
-    res.end(JSON.stringify(results));
   });
 
 db.query('CREATE TABLE IF NOT EXISTS `money_transfer` (' +
@@ -49,8 +51,6 @@ db.query('CREATE TABLE IF NOT EXISTS `money_transfer` (' +
   'PRIMARY KEY (`transaction_id`)' +
   ') ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4;', (error, results, fields) => {
     if (error) throw error;
-    res.end(JSON.stringify(results));
   });
-
 
 module.exports = db;
